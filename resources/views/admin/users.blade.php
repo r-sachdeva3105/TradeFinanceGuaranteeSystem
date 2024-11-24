@@ -89,6 +89,7 @@
                             <label for="user_type" class="form-label">Role</label>
                             <select class="form-control" id="user_type" name="user_type" required>
                                 <option value="applicant">Applicant</option>
+                                <option value="reviewer">Reviewer</option>
                                 <option value="admin">Admin</option>
                             </select>
                         </div>
@@ -123,7 +124,7 @@
         $('#userForm').show();
         $('#createUserBtn').hide();
         $('#submitBtn').text('Update User');
-        $('#userFormElement').attr('action', '/users/' + id);
+        $('#userFormElement').attr('action', 'users/' + id + '/edit');
     }
 
     function cancelEdit() {

@@ -88,6 +88,6 @@ class GuaranteeController extends Controller
     public function adminIndex()
     {
         $guarantees = Guarantee::all(); // Admin sees all guarantees
-        return view('admin.guarantees.index', compact('guarantees'));
+        return view('admin.guarantees', compact('guarantees'));
     }
 }

@@ -13,7 +13,7 @@ class UserController extends Controller
         $this->middleware('admin'); // Ensure only admins can manage users
     }
 
-    public function index()
+    public function adminIndex()
     {
         $users = User::all();
         return view('admin.users', compact('users'));
@@ -24,7 +24,7 @@ class UserController extends Controller
         return view('users.create');
     }
 
-    public function store(Request $request)
+    public function adminStore(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -40,7 +40,7 @@ class UserController extends Controller
             'user_type' => $request->user_type,
         ]);
 
-        return redirect()->route('users.index')->with('message', 'User created successfully.');
+        return redirect()->route('admin.users')->with('message', 'User created successfully.');
     }
 
     public function edit(User $user)
@@ -58,12 +58,12 @@ class UserController extends Controller
 
         $user->update($request->only('name', 'email', 'user_type'));
 
-        return redirect()->route('users.index')->with('message', 'User updated successfully.');
+        return redirect()->route('admin.users')->with('message', 'User updated successfully.');
     }
 
-    public function destroy(User $user)
+    public function adminDestroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with('message', 'User deleted successfully.');
+        return redirect()->route('admin.users')->with('message', 'User deleted successfully.');
     }
 }
