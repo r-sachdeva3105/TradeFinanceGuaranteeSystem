@@ -20,9 +20,9 @@
             <div class="content p-4">
                 <h1>Manage Users</h1>
 
-                @if(isset($message))
+                @if(session('message'))
                 <div class="alert alert-info">
-                    {{ $message }}
+                    {{ session('message') }}
                 </div>
                 @endif
 
