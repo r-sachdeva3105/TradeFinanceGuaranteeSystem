@@ -49,10 +49,12 @@ Route::middleware(['auth', 'reviewer'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard.admin');
     Route::get('/admin/guarantees', [GuaranteeController::class, 'adminIndex'])->name('admin.guarantees');
+    Route::post('/admin/guarantees', [GuaranteeController::class, 'adminStore'])->name('guarantees.store');
     Route::get('/admin/guarantees/{id}/edit', [GuaranteeController::class, 'edit'])->name('guarantees.edit');
     Route::delete('/admin/guarantees/{id}', [GuaranteeController::class, 'destroy'])->name('guarantees.destroy');
     Route::get('/admin/users', [UserController::class, 'adminIndex'])->name('admin.users');
-    Route::delete('/admin/users/{id}', [UserController::class, 'adminDestroy'])->name('users.destroy');
+    Route::delete('/admin/users/{user}', [UserController::class, 'adminDestroy'])->name('users.destroy');
+    // Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::post('/admin/users/', [UserController::class, 'adminStore'])->name('users.store');
     Route::post('/admin/users/{id}/edit', [UserController::class, 'adminUpdate'])->name('users.update');
 });

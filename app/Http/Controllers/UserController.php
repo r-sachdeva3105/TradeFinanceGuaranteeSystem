@@ -48,15 +48,25 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function adminUpdate(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'user_type' => 'required|string'
+            'email' => 'required|email|unique:users,email,' . $id, // Ensure unique email except for the current user
+            'user_type' => 'required|in:applicant,reviewer,admin', // Ensure valid role
         ]);
 
-        $user->update($request->only('name', 'email', 'user_type'));
+        $user = User::findOrFail($id);
+
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->user_type = $request->input('user_type');
+
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->input('password'));
+        }
+
+        $user->save();
 
         return redirect()->route('admin.users')->with('message', 'User updated successfully.');
     }
