@@ -26,4 +26,3 @@ class ReviewerMiddleware
         return redirect()->route('dashboard.applicant');
     }
 }
-

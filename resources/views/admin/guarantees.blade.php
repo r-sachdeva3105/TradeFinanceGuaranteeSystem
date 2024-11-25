@@ -14,7 +14,6 @@
                 </ul>
             </div>
         </aside>
-
         <!-- Main Content -->
         <div class="col-md-10">
             <div class="content p-4">
@@ -43,6 +42,7 @@
                             <th>Currency</th>
                             <th>Expiry Date</th>
                             <th>Applicant</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -54,7 +54,8 @@
                             <td>{{ $guarantee->nominal_amount }}</td>
                             <td>{{ $guarantee->nominal_amount_currency }}</td>
                             <td>{{ $guarantee->expiry_date }}</td>
-                            <td>{{ $guarantee->user->name ?? 'Unknown' }}</td>
+                            <td>{{ $guarantee->applicant_name ?? 'Unknown' }}</td> <!-- Fetch the applicant name from user -->
+                            <td>{{ ucfirst($guarantee->status) }}</td> <!-- Display the status -->
                             <td>
                                 <form action="{{ route('guarantees.destroy', $guarantee->id) }}" method="POST" style="display:inline;">
                                     @csrf
@@ -137,24 +138,6 @@
         } else {
             guaranteeForm.hide();
         }
-    }
-
-    function editGuarantee(id, corporateReferenceNumber, guaranteeType, nominalAmount, currency, expiryDate, applicantName, beneficiaryName, applicantAddress, beneficiaryAddress) {
-        $('#formTitle').text('Edit Guarantee');
-        $('#guaranteeId').val(id);
-        $('#corporate_reference_number').val(corporateReferenceNumber);
-        $('#guarantee_type').val(guaranteeType);
-        $('#nominal_amount').val(nominalAmount);
-        $('#nominal_amount_currency').val(currency);
-        $('#expiry_date').val(expiryDate);
-        $('#applicant_name').val(applicantName);
-        $('#applicant_address').val(applicantAddress);
-        $('#beneficiary_name').val(beneficiaryName);
-        $('#beneficiary_address').val(beneficiaryAddress);
-        $('#guaranteeForm').show();
-        $('#createGuaranteeBtn').hide();
-        $('#submitGuaranteeBtn').text('Update Guarantee');
-        $('#guaranteeFormElement').attr('action', '/guarantees/' + id);
     }
 
     function cancelGuaranteeEdit() {
