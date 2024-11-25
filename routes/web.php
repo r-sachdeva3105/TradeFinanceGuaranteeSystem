@@ -9,6 +9,8 @@ use App\Http\Controllers\GuaranteeController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ReviewerController;
+
 
 use App\Http\Controllers\UserController;
 
@@ -32,11 +34,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/guarantees/{id}', [GuaranteeController::class, 'destroy'])->name('guarantees.destroy');
 });
 
-// Route for the Reviewer Panel
+
+// Routes for the Reviewer Panel
 Route::middleware(['auth', 'reviewer'])->group(function () {
-    Route::get('/reviewer/dashboard', [DashboardController::class, 'reviewerDashboard'])->name('dashboard.reviewer');
-    Route::get('/reviewer/guarantees', [GuaranteeController::class, 'reviewerIndex'])->name('reviewer.guarantees');
+    Route::get('/reviewer/dashboard', [ReviewerController::class, 'reviewerDashboard'])->name('dashboard.reviewer');
+    Route::get('/reviewer/guarantees', [ReviewerController::class, 'reviewerIndex'])->name('reviewer.guarantees');
+    Route::post('/reviewer/guarantees/{id}/update', [ReviewerController::class, 'updateGuarantee'])->name('reviewer.guarantees.update');
 });
+
+
+
 
 // Route for the Admin Panel
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -49,3 +56,4 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/users/', [UserController::class, 'adminStore'])->name('users.store');
     Route::post('/admin/users/{id}/edit', [UserController::class, 'adminUpdate'])->name('users.update');
 });
+

@@ -60,5 +60,8 @@ class Kernel extends HttpKernel
 
         // Custom middleware for admin check
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
+
+        // Custom middleware for reviewer check
+        'reviewer' => \App\Http\Middleware\ReviewerMiddleware::class,
     ];
 }

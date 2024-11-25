@@ -19,10 +19,15 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        // Check user type and redirect accordingly
         if ($user->user_type === 'admin') {
             return redirect()->route('dashboard.admin');
-        } else {
-            return redirect()->route('dashboard.applicant');
         }
+
+        if ($user->user_type === 'reviewer') {
+            return redirect()->route('dashboard.reviewer');
+        }
+
+        return redirect()->route('dashboard.applicant');
     }
 }

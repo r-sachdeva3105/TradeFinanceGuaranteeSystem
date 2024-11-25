@@ -3,38 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guarantee;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class GuaranteeController extends Controller
 {
-    // Show the Applicant's Guarantees (only their own guarantees)
     public function index()
     {
-        $guarantees = Guarantee::where('user_id', auth()->id())->get(); // Only fetch guarantees for the logged-in user
+        $guarantees = Guarantee::where('user_id', auth()->id())->get();
         return view('guarantees.index', compact('guarantees'));
     }
 
-    // Show form to create a new Guarantee
     public function create()
     {
         return view('guarantees.create');
     }
 
-    // Store a newly created Guarantee
-    public function store(Request $request)
+    public function adminStore(Request $request)
     {
-        $validated = $request->validate([
-            'corporate_reference_number' => 'required|unique:guarantees',
-            'expiry_date' => 'required|date|after:today',
-            // More validation rules here...
+        $request->validate([
+            'corporate_reference_number' => 'required|string|max:255',
+            'guarantee_type' => 'required|string|max:255',
+            'nominal_amount' => 'required|numeric|min:0',
+            'nominal_amount_currency' => 'required|string|max:255',
+            'expiry_date' => 'required|date',
+            'applicant_name' => 'required|string|max:255',
+            'applicant_address' => 'required|string|max:255',
+            'beneficiary_name' => 'required|string|max:255',
+            'beneficiary_address' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
         ]);
 
-        // Save the guarantee with the logged-in user's ID
-        $guarantee = new Guarantee($validated);
-        $guarantee->user_id = auth()->id();  // Link guarantee to the logged-in user
-        $guarantee->save();
+        Guarantee::create($request->all());
 
-        return redirect()->route('dashboard')->with('success', 'Guarantee created.');
+        return redirect()->route('admin.guarantees')->with('message', 'Guarantee created successfully.');
     }
 
     // Show the form to edit a Guarantee
@@ -69,12 +71,10 @@ class GuaranteeController extends Controller
         return redirect()->route('dashboard')->with('success', 'Guarantee updated.');
     }
 
-    // Delete the specified Guarantee
     public function destroy($id)
     {
         $guarantee = Guarantee::findOrFail($id);
 
-        // Ensure the logged-in user can only delete their own guarantee
         if ($guarantee->user_id != auth()->id()) {
             abort(403, 'Unauthorized');
         }
@@ -84,10 +84,10 @@ class GuaranteeController extends Controller
         return redirect()->route('dashboard')->with('success', 'Guarantee deleted.');
     }
 
-    // Show all Guarantees for Admin (Admin can see all)
     public function adminIndex()
     {
-        $guarantees = Guarantee::all(); // Admin sees all guarantees
-        return view('admin.guarantees', compact('guarantees'));
+        $guarantees = Guarantee::all();
+        $applicants = User::where('user_type', 'applicant')->get();
+        return view('admin.guarantees', compact('guarantees', 'applicants'));
     }
 }
