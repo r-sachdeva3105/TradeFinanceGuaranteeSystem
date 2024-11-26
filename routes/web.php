@@ -6,6 +6,7 @@ use App\Http\Controllers\IndexController;
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuaranteeController;
+use App\Http\Controllers\FilesController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -54,7 +55,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/admin/guarantees/{id}', [GuaranteeController::class, 'destroy'])->name('guarantees.destroy');
     Route::get('/admin/users', [UserController::class, 'adminIndex'])->name('admin.users');
     Route::delete('/admin/users/{user}', [UserController::class, 'adminDestroy'])->name('users.destroy');
-    // Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::post('/admin/users/', [UserController::class, 'adminStore'])->name('users.store');
     Route::post('/admin/users/{id}/edit', [UserController::class, 'adminUpdate'])->name('users.update');
+    Route::get('/admin/files', [FilesController::class, 'adminIndex'])->name('admin.files');
+    Route::post('/admin/files/upload', [FilesController::class, 'upload'])->name('files.upload');
+    Route::post('/admin/files/{id}/parse', [FilesController::class, 'parse'])->name('files.parse');
+    Route::get('/admin/files/{id}/download', [FilesController::class, 'download'])->name('files.download');
+    Route::delete('/admin/files/{id}', [FilesController::class, 'destroy'])->name('files.destroy');
 });

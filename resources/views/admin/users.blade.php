@@ -11,6 +11,7 @@
                     <li><a href="{{ route('dashboard.admin') }}" class="text-white h4 text-decoration-none d-block p-2">Dashboard</a></li>
                     <li><a href="{{ route('admin.users') }}" class="text-white h4 text-decoration-none d-block p-2">Users</a></li>
                     <li><a href="{{ route('admin.guarantees') }}" class="text-white h4 text-decoration-none d-block p-2">Guarantees</a></li>
+                    <li><a href="{{ route('admin.files') }}" class="text-white h4 text-decoration-none d-block p-2">Files</a></li>
                 </ul>
             </div>
         </aside>

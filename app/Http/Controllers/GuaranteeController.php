@@ -19,6 +19,34 @@ class GuaranteeController extends Controller
         return view('guarantees.create');
     }
 
+    // Store a new guarantee
+    public function store(Request $request)
+    {
+        $request->validate([
+            'corporate_reference_number' => 'required|string',
+            'guarantee_type' => 'required|string',
+            'nominal_amount' => 'required|numeric',
+            'expiry_date' => 'required|date',
+        ]);
+
+        // Store the new guarantee
+        $guarantee = new Guarantee();
+        $guarantee->corporate_reference_number = $request->corporate_reference_number;
+        $guarantee->guarantee_type = $request->guarantee_type;
+        $guarantee->nominal_amount = $request->nominal_amount;
+        $guarantee->nominal_amount_currency = $request->nominal_amount_currency;
+        $guarantee->expiry_date = $request->expiry_date;
+        $guarantee->applicant_name = $request->applicant_name;
+        $guarantee->applicant_address = $request->applicant_address;
+        $guarantee->beneficiary_name = $request->beneficiary_name;
+        $guarantee->beneficiary_address = $request->beneficiary_address;
+        $guarantee->user_id = auth()->id(); // Assign the current user as the applicant
+        $guarantee->status = 'pending'; // Default status
+        $guarantee->save();
+
+        return redirect()->route('guarantees.index')->with('success', 'Guarantee created successfully.');
+    }
+
     public function adminStore(Request $request)
     {
         $request->validate([
@@ -39,49 +67,55 @@ class GuaranteeController extends Controller
         return redirect()->route('admin.guarantees')->with('message', 'Guarantee created successfully.');
     }
 
-    // Show the form to edit a Guarantee
+    // Show the form to edit a guarantee
     public function edit($id)
     {
         $guarantee = Guarantee::findOrFail($id);
-        // Ensure the logged-in user can only edit their own guarantee
-        if ($guarantee->user_id != auth()->id()) {
-            abort(403, 'Unauthorized');
+
+        // Check if the logged-in user is the owner of the guarantee
+        if ($guarantee->user_id !== auth()->id()) {
+            return redirect()->route('guarantees.index')->with('error', 'Unauthorized action.');
         }
 
         return view('guarantees.edit', compact('guarantee'));
     }
 
-    // Update the specified Guarantee
+    // Update the guarantee
     public function update(Request $request, $id)
     {
-        $guarantee = Guarantee::findOrFail($id);
-
-        // Ensure the logged-in user can only update their own guarantee
-        if ($guarantee->user_id != auth()->id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        $validated = $request->validate([
-            'expiry_date' => 'required|date|after:today',
-            // More validation rules here...
+        $request->validate([
+            'corporate_reference_number' => 'required|string',
+            'guarantee_type' => 'required|string',
+            'nominal_amount' => 'required|numeric',
+            'expiry_date' => 'required|date',
         ]);
 
-        $guarantee->update($validated);
+        $guarantee = Guarantee::findOrFail($id);
 
-        return redirect()->route('dashboard')->with('success', 'Guarantee updated.');
+        // Check if the logged-in user is the owner of the guarantee
+        if ($guarantee->user_id !== auth()->id()) {
+            return redirect()->route('guarantees.index')->with('error', 'Unauthorized action.');
+        }
+
+        // Update the guarantee
+        $guarantee->update($request->all());
+
+        return redirect()->route('guarantees.index')->with('success', 'Guarantee updated successfully.');
     }
 
+    // Delete a guarantee
     public function destroy($id)
     {
         $guarantee = Guarantee::findOrFail($id);
 
-        if ($guarantee->user_id != auth()->id()) {
-            abort(403, 'Unauthorized');
+        // Check if the logged-in user is the owner of the guarantee
+        if ($guarantee->user_id !== auth()->id()) {
+            return redirect()->route('guarantees.index')->with('error', 'Unauthorized action.');
         }
 
         $guarantee->delete();
 
-        return redirect()->route('dashboard')->with('success', 'Guarantee deleted.');
+        return redirect()->route('guarantees.index')->with('success', 'Guarantee deleted successfully.');
     }
 
     public function adminIndex()
