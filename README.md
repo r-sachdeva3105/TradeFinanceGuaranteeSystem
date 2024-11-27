@@ -6,7 +6,7 @@ The system ensures data integrity with robust validation and is containerized fo
 
 ## Team Members
 
-Pranav Panchal
+Pranav Panchal  
 Rajat Sachdeva
 Shrabani Sagareeka
 Nayeem Khan
