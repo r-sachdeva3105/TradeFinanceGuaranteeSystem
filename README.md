@@ -1,5 +1,18 @@
 # Trade Finance Guarantee System
 
+The TradeFinance Guarantee System is a Laravel-based application for managing financial guarantees, including Bank, Bid Bond, Insurance, and Surety types.
+It supports secure CRUD operations, manual data entry, and bulk processing through CSV, JSON, or XML uploads, with files stored as database blobs. 
+The system ensures data integrity with robust validation and is containerized for deployment using Podman.
+
+## Team Members
+
+Pranav Panchal
+Rajat Sachdeva
+Shrabani Sagareeka
+Nayeem Khan
+Mitali Sharma
+
+
 ## Screenshots
 
 Index Page
@@ -34,3 +47,126 @@ Admin - Manage Guarantees
 
 Admin - Manage Files
 ![image](https://github.com/user-attachments/assets/a9838065-8d5d-4a8e-ad56-3d616d45ea83)
+
+# Podman Deployment Instructions 
+
+
+## 1. Start the Application Using Docker Compose
+ 
+To bring up the entire application stack, run the following command in your project root directory:
+ 
+```bash
+docker-compose up
+```
+ 
+Or, if you prefer to run the containers in the background, use:
+ 
+```bash
+docker-compose up -d
+```
+ 
+This will start the services defined in your `docker-compose.yml` file, including the PHP application, MySQL database, and any other necessary services.
+ 
+---
+ 
+## 2. Set Up the PHP Application
+ 
+Once the services are up and running, follow these steps to set up the PHP application:
+ 
+### Access the PHP Container
+ 
+```bash
+docker exec -it trade-finance-app bash
+```
+ 
+### Generate the Laravel Application Key
+ 
+```bash
+php artisan key:generate
+```
+ 
+### Run Migrations
+ 
+```bash
+php artisan migrate
+```
+ 
+### Update and Install Node.js Dependencies
+ 
+```bash
+apt-get update
+apt-get install -y nodejs npm
+```
+ 
+### Install NPM Dependencies
+ 
+```bash
+npm install
+```
+ 
+### Run the Development Server
+ 
+```bash
+npm run dev
+```
+ 
+---
+ 
+## 3. Set Up MySQL Database
+ 
+Next, set up the MySQL database by following these steps:
+ 
+### Access the MySQL Container
+ 
+```bash
+docker exec -it mysql bash
+```
+ 
+### Log in to MySQL
+ 
+```bash
+mysql -u root -p
+```
+ 
+- **Password:** `root`
+ 
+### Select the Database
+ 
+```bash
+USE trade_finance;
+```
+ 
+### Show the Tables
+ 
+```bash
+SHOW TABLES;
+```
+ 
+### Import the Database Dump
+ 
+The database dump file (`TradeFinance.sql`) can be imported it into the `trade_finance` database:
+ 
+```bash
+mysql -u root -p trade_finance < /path/to/TradeFinance.sql
+```
+ 
+---
+ 
+## 4. Build the Docker Image
+ 
+If you need to build the Docker image manually, follow these steps:
+ 
+### Build the Image from the Dockerfile
+ 
+In the project root directory, run the following command to build the Docker image:
+ 
+```bash
+docker build -t trade-finance-app .
+```
+ 
+This command will:
+ 
+- Use the `Dockerfile` in the current directory.
+- Build the image with the tag `trade-finance-app`.
+ 
+Once the build process is complete, the image will be ready for use
